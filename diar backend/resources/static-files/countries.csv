@@ -1,0 +1,97 @@
+id,name,iso_code,flag_path,lat,lng
+2,UAE,AE,ae.png,23.424076,53.847818
+13,Austria,AT,at.png,47.516231,14.550072
+14,Australia,AU,au.png,-25.274398,133.775136
+19,Bangladesh,BD,bd.png,23.684994,90.356331
+29,Brazil,BR,br.png,-14.235004,-51.92528
+36,Canada,CA,ca.png,56.130366,-106.346771
+41,Switzerland,CH,ch.png,46.818188,8.227512
+44,Chile,CL,cl.png,-35.675147,-71.542969
+47,Colombia,CO,co.png,4.570868,-74.297333
+48,Costa Rica,CR,cr.png,9.748917,-83.753428
+54,Germany,DE,de.png,51.165691,10.451526
+56,Denmark,DK,dk.png,56.26392,9.501785
+62,Egypt,EG,eg.png,26.820553,30.802498
+68,Fiji,FJ,fj.png,-16.578193,179.414413
+72,France,FR,fr.png,46.227638,2.213749
+74,UK,GB,gb.png,55.378051,-3.435973
+100,Ireland,IE,ie.png,53.41291,-8.24389
+101,Israel,IL,il.png,31.046051,34.851612
+103,India,IN,in.png,20.593684,78.96288
+106,Iran,IR,ir.png,32.427908,53.688046
+108,Italy,IT,it.png,41.87194,12.56738
+110,Jamaica,JM,jm.png,18.109581,-77.297508
+111,Jordan,JO,jo.png,30.585164,36.238414
+112,Japan,JP,jp.png,36.204824,138.252924
+120,South Korea,KR,kr.png,35.907757,127.766922
+128,Sri Lanka,LK,lk.png,7.873054,80.771797
+137,Moldova,MD,md.png,47.411631,28.369885
+144,Mongolia,MN,mn.png,46.862496,103.846656
+151,Mauritius,MU,mu.png,-20.348404,57.552152
+154,Mexico,MX,mx.png,23.634501,-102.552784
+155,Malaysia,MY,my.png,4.210484,101.975766
+161,Nigeria,NG,ng.png,9.081999,8.675277
+164,Norway,NO,no.png,60.472024,8.468946
+168,New Zealand,NZ,nz.png,-40.900557,174.885971
+171,Peru,PE,pe.png,-9.189967,-75.015152
+173,Papua New Guinea,PG,pg.png,-6.314993,143.95555
+187,Serbia,RS,rs.png,44.016521,21.005859
+189,Rwanda,RW,rw.png,-1.940278,29.873888
+190,Saudi Arabia,SA,sa.png,23.885942,45.079162
+191,Solomon Islands,SB,sb.png,-9.64571,160.156194
+195,Singapore,SG,sg.png,1.352083,103.819836
+213,Thailand,TH,th.png,15.870032,100.992541
+220,Turkey,TR,tr.png,38.963745,35.243322
+223,Taiwan,TW,tw.png,23.69781,120.960515
+226,Uganda,UG,ug.png,1.373333,32.290275
+228,USA,US,us.png,37.09024,-95.712891
+233,Venezuela,VE,ve.png,6.42375,-66.58973
+243,South Africa,ZA,za.png,-30.559482,22.937506
+2,UAE,AE,ae.png,23.424076,53.847818
+13,Austria,AT,at.png,47.516231,14.550072
+14,Australia,AU,au.png,-25.274398,133.775136
+19,Bangladesh,BD,bd.png,23.684994,90.356331
+29,Brazil,BR,br.png,-14.235004,-51.92528
+36,Canada,CA,ca.png,56.130366,-106.346771
+41,Switzerland,CH,ch.png,46.818188,8.227512
+44,Chile,CL,cl.png,-35.675147,-71.542969
+47,Colombia,CO,co.png,4.570868,-74.297333
+48,Costa Rica,CR,cr.png,9.748917,-83.753428
+54,Germany,DE,de.png,51.165691,10.451526
+56,Denmark,DK,dk.png,56.26392,9.501785
+62,Egypt,EG,eg.png,26.820553,30.802498
+68,Fiji,FJ,fj.png,-16.578193,179.414413
+72,France,FR,fr.png,46.227638,2.213749
+74,UK,GB,gb.png,55.378051,-3.435973
+100,Ireland,IE,ie.png,53.41291,-8.24389
+101,Israel,IL,il.png,31.046051,34.851612
+103,India,IN,in.png,20.593684,78.96288
+106,Iran,IR,ir.png,32.427908,53.688046
+108,Italy,IT,it.png,41.87194,12.56738
+110,Jamaica,JM,jm.png,18.109581,-77.297508
+111,Jordan,JO,jo.png,30.585164,36.238414
+112,Japan,JP,jp.png,36.204824,138.252924
+120,South Korea,KR,kr.png,35.907757,127.766922
+128,Sri Lanka,LK,lk.png,7.873054,80.771797
+137,Moldova,MD,md.png,47.411631,28.369885
+144,Mongolia,MN,mn.png,46.862496,103.846656
+151,Mauritius,MU,mu.png,-20.348404,57.552152
+154,Mexico,MX,mx.png,23.634501,-102.552784
+155,Malaysia,MY,my.png,4.210484,101.975766
+161,Nigeria,NG,ng.png,9.081999,8.675277
+164,Norway,NO,no.png,60.472024,8.468946
+168,New Zealand,NZ,nz.png,-40.900557,174.885971
+171,Peru,PE,pe.png,-9.189967,-75.015152
+173,Papua New Guinea,PG,pg.png,-6.314993,143.95555
+187,Serbia,RS,rs.png,44.016521,21.005859
+189,Rwanda,RW,rw.png,-1.940278,29.873888
+190,Saudi Arabia,SA,sa.png,23.885942,45.079162
+191,Solomon Islands,SB,sb.png,-9.64571,160.156194
+195,Singapore,SG,sg.png,1.352083,103.819836
+213,Thailand,TH,th.png,15.870032,100.992541
+220,Turkey,TR,tr.png,38.963745,35.243322
+223,Taiwan,TW,tw.png,23.69781,120.960515
+226,Uganda,UG,ug.png,1.373333,32.290275
+228,USA,US,us.png,37.09024,-95.712891
+233,Venezuela,VE,ve.png,6.42375,-66.58973
+243,South Africa,ZA,za.png,-30.559482,22.937506
