@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 //routers
-const router = require("./routes/peopleRoute");
+const router = require("./routes/importRoute");
 app.use("/api/people", router);
 
 

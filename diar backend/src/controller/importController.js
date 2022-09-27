@@ -2,6 +2,7 @@ const db = require("../model");
 const multer = require("multer");
 const path = require("path");
 const xlsx = require("xlsx");
+const excelJS = require("exceljs");
 
 //create main model
 const Indicator = db.indicators;
@@ -13,6 +14,7 @@ const Countries = db.countries;
 const QuestionMaster = db.questionMaster;
 const Questions = db.questions;
 const Ndhs = db.ndhs;
+
 //global variables
 let tableData = [];
 let govenanceTableData = [];
@@ -153,43 +155,6 @@ const getUltimateField = (req) => {
   }
 };
 
-const getIndicatorsData = (req) => {
-  try {
-    let reqpath = path.join(__basedir, "..", "/resources/", req.file.filename);
-    const workbook = xlsx.readFile(reqpath);
-    // let apiData = await Indicator.findAll();
-    let post = {};
-    // let data = [];
-    // apiData.forEach((element) => {
-    //   data.push(element.dataValues);
-    // });
-    workbook.SheetNames.forEach((element) => {
-      let worksheet = workbook.Sheets[element];
-      for (let cell in worksheet) {
-        const cellAsString = cell.toString();
-        if (cellAsString[1] > 1) {
-          if (cellAsString[0] === "C") {
-            post.name = worksheet[cell].v;
-            if (
-              !post.name.startsWith("Total") &&
-              !post.name.startsWith("TOTAL") &&
-              post.name !== undefined &&
-              indicatorTableData.findIndex((obj) => obj.name === post.name) ===
-                -1
-              // data.findIndex((obj) => obj.name === post.name) === -1
-            ) {
-              indicatorTableData.push(post);
-              post = {};
-            }
-          }
-        }
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const getTaxanomyData = (req) => {
   try {
     let reqpath = path.join(__basedir, "..", "/resources/", req.file.filename);
@@ -232,6 +197,51 @@ const getTaxanomyData = (req) => {
   }
 };
 
+const getIndicatorsData = (req) => {
+  try {
+    let reqpath = path.join(__basedir, "..", "/resources/", req.file.filename);
+    const workbook = xlsx.readFile(reqpath);
+    // let apiData = await Indicator.findAll();
+    let post = {};
+    // let data = [];
+    // apiData.forEach((element) => {
+    //   data.push(element.dataValues);
+    // });
+    workbook.SheetNames.forEach((element) => {
+      let worksheet = workbook.Sheets[element];
+      for (let cell in worksheet) {
+        const cellAsString = cell.toString();
+        if (cellAsString[0] === "C") {
+          if (cell !== "C1") {
+            if (worksheet[cell].v !== undefined) {
+              post.name = worksheet[cell].v;
+              let pattern = /[(]+[\d]*[)]+/;
+              let result = post.name.search(pattern);
+              if (result !== -1) {
+                post.name = post.name.substr(0, result - 1);
+                post.name = post.name.trim();
+              }
+            }
+            if (
+              !post.name.startsWith("Total") &&
+              !post.name.startsWith("TOTAL") &&
+              post.name !== undefined &&
+              indicatorTableData.findIndex((obj) => obj.name === post.name) ===
+                -1
+              // data.findIndex((obj) => obj.name === post.name) === -1
+            ) {
+              indicatorTableData.push(post);
+              post = {};
+            }
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getQuestionMaster = (req) => {
   try {
     let reqpath = path.join(__basedir, "..", "/resources/", req.file.filename);
@@ -240,34 +250,41 @@ const getQuestionMaster = (req) => {
     workbook.SheetNames.forEach((element) => {
       let worksheet = workbook.Sheets[element];
       for (let cell in worksheet) {
-        // const cellAsString = cell.toString();
-        console.log(cellAsString);
-        if (cellAsString[1] >= 1) {
-          if (cellAsString[0] === "D") {
-            post.name = worksheet[cell].v;
-            // console.log(post.name);
-            if (post.name !== undefined && post.name !== 100) {
-              let pattern = /[(]+[\d]*[)]+/;
-              let result = post.name.search(pattern);
-              if (result !== -1) {
-                post.name = post.name.substr(0, result - 1);
+        const cellAsString = cell.toString();
+        if (cellAsString[0] === "D") {
+          if (cell !== "D1") {
+            if (worksheet[cell].v !== undefined && worksheet[cell].v !== 100) {
+              post.name = worksheet[cell].v.trim();
+            }
+          }
+          if (post.name !== undefined && post.name !== 100) {
+            let pattern = /[(]+[\d]*[)]+/;
+            let result = post.name.search(pattern);
+            if (result !== -1) {
+              post.name = post.name.substr(0, result - 1);
+              post.name = post.name.trim();
+              let lastChar = post.name.slice(-1);
+              if (lastChar == "?") {
+                post.name = post.name.slice(0, -1).trim();
               }
             }
-            if (
-              post.name !== undefined &&
-              post.name !== 100 &&
-              questionMasterTableData.findIndex(
-                (obj) => obj.name === post.name
-              ) === -1
-              // data.findIndex((obj) => obj.name === post.name) === -1
-            ) {
-              questionMasterTableData.push(post);
-              post = {};
-            }
+          }
+          if (
+            post.name !== "" &&
+            post.name !== undefined &&
+            post.name !== 100 &&
+            questionMasterTableData.findIndex(
+              (obj) => obj.name === post.name
+            ) === -1
+            // data.findIndex((obj) => obj.name === post.name) === -1
+          ) {
+            questionMasterTableData.push(post);
+            post = {};
           }
         }
       }
     });
+    // console.log(questionMasterTableData);
   } catch (error) {
     console.log(error);
   }
@@ -290,8 +307,8 @@ const getQuestionsData = (req) => {
       let worksheet = workbook.Sheets[element];
       for (let cell in worksheet) {
         const cellAsString = cell.toString();
-        if (cellAsString[1] > 1) {
-          if (cellAsString[0] === "A") {
+        if (cellAsString[0] === "A") {
+          if (cell !== "A1") {
             uf = worksheet[cell].v;
             if (ufData.findIndex((obj) => obj.name === uf) !== -1) {
               post.ultimate_fields_id =
@@ -303,15 +320,25 @@ const getQuestionsData = (req) => {
               post.development_types_id = 2;
             }
           }
-          if (cellAsString[0] === "B") {
+        }
+        if (cellAsString[0] === "B") {
+          if (cell !== "B1") {
             taxo = worksheet[cell].v.trim();
             if (taxanomiesData.findIndex((obj) => obj.name === taxo) !== -1) {
               post.taxonomy_id =
                 taxanomiesData.findIndex((obj) => obj.name === taxo) + 1;
             }
           }
-          if (cellAsString[0] === "C") {
+        }
+        if (cellAsString[0] === "C") {
+          if (cell !== "C1") {
             indi = worksheet[cell].v;
+            let pattern = /[(]+[\d]*[)]+/;
+            let result = indi.search(pattern);
+            if (result !== -1) {
+              indi = indi.substr(0, result - 1);
+              indi = indi.trim();
+            }
             if (
               !indi.startsWith("Total") &&
               !indi.startsWith("TOTAL") &&
@@ -319,9 +346,12 @@ const getQuestionsData = (req) => {
             ) {
               post.indicator_id =
                 indicatorData.findIndex((obj) => obj.name === indi) + 1;
+              post.indicator_score = Number(indi.replace(/[^0-9]/g, ""));
             }
           }
-          if (cellAsString[0] === "D") {
+        }
+        if (cellAsString[0] === "D") {
+          if (cell !== "D1") {
             qm = worksheet[cell].v;
             if (qm !== undefined && qm !== 100) {
               let pattern = /[(]+[\d]*[)]+/;
@@ -339,11 +369,12 @@ const getQuestionsData = (req) => {
                 quesData.findIndex((obj) => obj.name === qm) + 1;
             }
           }
-          if (cellAsString[0] === "E") {
+        }
+        if (cellAsString[0] === "E") {
+          if (cell !== "E1") {
             if (!indi.startsWith("Total") && !indi.startsWith("TOTAL")) {
               post.question_score = worksheet[cell].v;
             }
-            post.indicator_score = 100;
             if (
               post.ultimate_fields_id !== undefined &&
               post.question_score !== undefined &&
@@ -399,12 +430,14 @@ const getNdhsMaster = (file) => {
       let worksheet = workbook.Sheets[element];
       for (let cell in worksheet) {
         const cellAsString = cell.toString();
-        if (cellAsString[1] > 1) {
-          post.country_id = countryData[0].id;
-          if (cellAsString[0] === "C") {
+        post.country_id = countryData[0].id;
+        if (cellAsString[0] === "C") {
+          if (cell !== "C1") {
             temp = worksheet[cell].v;
           }
-          if (cellAsString[0] === "D") {
+        }
+        if (cellAsString[0] === "D") {
+          if (cell !== "D1") {
             qm = worksheet[cell].v;
             if (qm !== undefined && qm !== 100) {
               let pattern = /[(]+[\d]*[)]+/;
@@ -430,15 +463,21 @@ const getNdhsMaster = (file) => {
               }
             }
           }
-          if (cellAsString[0] === "E") {
+        }
+        if (cellAsString[0] === "E") {
+          if (cell !== "E1") {
             if (!temp.startsWith("Total") && !temp.startsWith("TOTAL")) {
               post.score = worksheet[cell].v;
             }
           }
-          if (cellAsString[0] === "F") {
+        }
+        if (cellAsString[0] === "F") {
+          if (cell !== "F1") {
             post.status = worksheet[cell].v;
           }
-          if (cellAsString[0] === "G") {
+        }
+        if (cellAsString[0] === "G") {
+          if (cell !== "G1") {
             post.texts = worksheet[cell].v;
             if (typeof post.texts !== "number") {
               post.texts = worksheet[cell].v
@@ -446,14 +485,16 @@ const getNdhsMaster = (file) => {
                 .trim();
             }
           }
-          if (cellAsString[0] === "H") {
+        }
+        if (cellAsString[0] === "H") {
+          if (cell !== "H1") {
             post.links = worksheet[cell].v
               .replace(/(\r\n|\r|\n|\|)/g, ",")
               .trim();
             post.year = 2021;
           }
           if (
-            post.texts !== undefined &&
+            post.country_id !== undefined &&
             post.links !== undefined &&
             post.status !== undefined &&
             post.question_id !== undefined &&
@@ -506,14 +547,14 @@ const upload = multer({
 const getAllData = async (req, res) => {
   req.files.forEach((file) => {
     req.file = file;
-    // getCountriesData(req, res);
-    // getGovernanceType(req);
-    // getUltimateField(req);
-    // getIndicatorsData(req);
-    // getTaxanomyData(req);
+    getCountriesData(req, res);
+    getGovernanceType(req);
+    getUltimateField(req);
+    getIndicatorsData(req);
+    getTaxanomyData(req);
     getQuestionMaster(req);
-    // getQuestionsData(req);
-    // getNdhsMaster(file);
+    getQuestionsData(req);
+    getNdhsMaster(file);
   });
 };
 
@@ -567,15 +608,15 @@ const setAllData = async (req, res) => {
   try {
     // loadData().then(() => {
     getAllData(req, res).then(async () => {
-      // await Countries.bulkCreate(tableData);
-      // await getDevelopmentType(req, res);
-      // await Governances.bulkCreate(govenanceTableData);
-      // await UltimateField.bulkCreate(ultimateTableData);
-      // await Indicator.bulkCreate(indicatorTableData);
-      // await Taxonomies.bulkCreate(taxonomyTableData);
-      // await QuestionMaster.bulkCreate(questionMasterTableData);
-      // await Questions.bulkCreate(questionTableData);
-      // await Ndhs.bulkCreate(ndhsTableData);
+      await Countries.bulkCreate(tableData);
+      await getDevelopmentType(req, res);
+      await Governances.bulkCreate(govenanceTableData);
+      await UltimateField.bulkCreate(ultimateTableData);
+      await Indicator.bulkCreate(indicatorTableData);
+      await Taxonomies.bulkCreate(taxonomyTableData);
+      await QuestionMaster.bulkCreate(questionMasterTableData);
+      await Questions.bulkCreate(questionTableData);
+      await Ndhs.bulkCreate(ndhsTableData);
       res.status(200).send({
         message: "files uploaded successfully",
       });
@@ -585,24 +626,133 @@ const setAllData = async (req, res) => {
     console.log(error);
     return res.status(500).send(error);
   }
+};
 
-  // .then(async () => {
-  //   govenanceTableData = [];
-  //   ultimateTableData = [];
-  //   indicatorTableData = [];
-  //   taxonomyTableData = [];
-  //   questionMasterTableData = [];
-  //   questionTableData = [];
-  //   ndhsTableData = [];
-  //   tableData = [];
-  // });
+//export functionality
+const exportData = (req, res) => {
+  let exportTable = [];
+  let post = {};
+  let tempTaxonomy;
+  let tempUf;
+  let tempIndicatorId;
+  let tempqusNdhsId;
+  let tempCountry = "";
+  loadData().then(() => {
+    tableData.forEach((country) => {
+      tempCountry = country.name;
+      const path = "resources/download-files"; // Path to download excel
+      const workbook = new excelJS.Workbook();
+      govenanceTableData.forEach((governance) => {
+        const worksheet = workbook.addWorksheet(governance.name); // New Worksheet
+        worksheet.columns = [
+          { header: "Ultimate", key: "ultimate", width: 20 },
+          { header: "Taxonomy", key: "taxonomy", width: 20 },
+          { header: "Indicators", key: "indicator", width: 20 },
+          { header: "Actual Score", key: "questionScore", width: 10 },
+          { header: "Questions", key: "question", width: 30 },
+          { header: "Status", key: "status", width: 10 },
+          { header: "Texts", key: "texts", width: 40 },
+          { header: "Links", key: "links", width: 40 },
+        ];
+        ultimateTableData.forEach((uf) => {
+          tempUf = uf.id;
+          post.ultimate = uf.name;
+          let mainTaxonomy = taxonomyTableData.filter(
+            (taxonomy) => taxonomy.governance_id === governance.id
+          );
+          mainTaxonomy.forEach((taxonomy) => {
+            if (taxonomy.governance_id === governance.id) {
+              tempTaxonomy = taxonomy.id;
+              post.taxonomy = taxonomy.name;
+            }
+            // Create a new workbook
+            indicatorTableData.forEach((indicator) => {
+              post.indicator = indicator.name;
+              tempIndicatorId = indicator.id;
+              let mainQuestionTable = questionTableData.filter(
+                (question) =>
+                  question.taxonomy_id === tempTaxonomy &&
+                  question.ultimate_fields_id === tempUf &&
+                  question.indicator_id === tempIndicatorId
+              );
+              mainQuestionTable.forEach((question) => {
+                if (
+                  question.taxonomy_id === tempTaxonomy &&
+                  question.ultimate_fields_id === tempUf &&
+                  question.indicator_id === tempIndicatorId
+                ) {
+                  tempqusNdhsId = question.id;
+                  tempQuestionId = question.question_id;
+                  let questionMain = questionMasterTableData.filter(
+                    (qus) => qus.id === tempQuestionId
+                  );
+                  post.question = questionMain[0].name;
+                  post.questionScore = question.question_score;
+                }
+                let maindhsTable = ndhsTableData.filter(
+                  (ndhs) =>
+                    ndhs.country_id === country.id &&
+                    ndhs.question_id === tempqusNdhsId
+                );
+                maindhsTable.forEach((ndhs) => {
+                  if (
+                    ndhs.country_id === country.id &&
+                    ndhs.question_id === tempqusNdhsId
+                  ) {
+                    post.status = ndhs.status;
+                    post.texts = ndhs.texts;
+                    post.links = ndhs.links;
+                    // tempYear = ndhs.year;
+                  }
+                  exportTable.push(post);
+                  post = {};
+                });
+              });
+            });
+          });
+        });
+        exportTable.forEach((data) => {
+          worksheet.addRow(data); // Add data in worksheet
+        });
+        worksheet.getRow(1).eachCell((cell) => {
+          cell.font = { bold: true };
+        });
+        exportTable = [];
+      });
+      const data = workbook.xlsx.writeFile(`${path}/${country.name}.xlsx`);
+    });
+    try {
+      res.send({
+        status: "success",
+        message: "file successfully downloaded",
+        path: `${path}/${tempCountry}.xlsx`,
+      });
+    } catch (err) {
+      console.log(err);
+      res.send({
+        status: "error",
+        message: "Something went wrong",
+      });
+    }
+  });
+
+  // Column for data in excel. key must match data key
+
+  // tableData = [];
+  // govenanceTableData = [];
+  // ultimateTableData = [];
+  // indicatorTableData = [];
+  // taxonomyTableData = [];
+  // questionMasterTableData = [];
+  // questionTableData = [];
+  // ndhsTableData = [];
+  // res.send(exportTable);
 };
 
 module.exports = {
   upload,
   getCountriesData,
   setAllData,
+  exportData,
   // testData,
 };
-
-

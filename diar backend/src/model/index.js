@@ -141,4 +141,5 @@ db.ndhs.belongsTo(db.countries, {
   as: "ctd_id",
 });
 
+
 module.exports = db;

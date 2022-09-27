@@ -11,16 +11,13 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
       },
       texts: {
-        type: Sequelize.TEXT,
+        type: Sequelize.ARRAY(Sequelize.TEXT),
       },
       links: {
-        type: Sequelize.TEXT,
-      },
-      year: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.ARRAY(Sequelize.TEXT),
       },
     },
     { timestamps: false }
